@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Configure axios instance
 const api = axios.create({
-  baseURL: 'http://localhost:5001/api',
+  baseURL: 'https://injoy.onrender.com/api',
   // In a real app, we'd use secure configuration from env variables
   // baseURL: process.env.EXPO_PUBLIC_API_URL,
 });
