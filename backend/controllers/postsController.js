@@ -3,7 +3,12 @@ const Post = require('../models/Post');
 // Get all posts
 exports.getPosts = async (req, res) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 });
+    const searchQuery = req.query.q;
+    let filter = {};
+    if (searchQuery) {
+      filter = { question: { $regex: searchQuery, $options: 'i' } };
+    }
+    const posts = await Post.find(filter).sort({ createdAt: -1 });
     res.json(posts);
   } catch (error) {
     console.error('Error getting posts:', error);

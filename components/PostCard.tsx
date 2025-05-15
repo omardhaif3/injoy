@@ -19,25 +19,32 @@ type PostCardProps = {
 
 export default function PostCard({ post, onPress }: PostCardProps) {
   const { isRTL, t, currentLanguage } = useI18n();
+
+  if (!post || !post.question || !post.options || !Array.isArray(post.options)) {
+    return null; // or render a placeholder for invalid post data
+  }
   
-  const totalVotes = post.options.reduce((sum, option) => sum + option.votes, 0);
+  const totalVotes = (post.options || []).reduce((sum, option) => sum + option.votes, 0);
   const commentCount = post.comments?.length || 0;
 
   // Calculate a gradient based on post id to give some visual variety
   const getRandomGradient = () => {
+    if (!post._id || typeof post._id !== 'string' || post._id.length === 0) {
+      return [colors.primaryGradient as string, colors.primary as string] as [string, string];
+    }
     // Use the last character of the post ID to determine gradient
     const lastChar = post._id.slice(-1);
     const code = lastChar.charCodeAt(0) % 4;
     
     switch (code) {
       case 0:
-        return [colors.primaryGradient, colors.primary];
+        return [colors.primaryGradient as string, colors.primary as string] as [string, string];
       case 1:
-        return [colors.secondaryGradient, colors.secondary];
+        return [colors.secondaryGradient as string, colors.secondary as string] as [string, string];
       case 2:
-        return [colors.accentGradient, colors.accent];
+        return [colors.accentGradient as string, colors.accent as string] as [string, string];
       default:
-        return [colors.successGradient, colors.success];
+        return [colors.successGradient as string, colors.success as string] as [string, string];
     }
   };
 

@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, RefreshControl, Platform } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, RefreshControl, Platform, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { usePosts } from 'hooks/usePosts';
@@ -14,7 +14,8 @@ import colors from 'constants/colors';
 export default function HomeScreen() {
   const router = useRouter();
   const { t, isRTL } = useI18n();
-  const { posts, loading, error, refreshPosts } = usePosts();
+  const [searchQuery, setSearchQuery] = useState('');
+  const { posts, loading, error, refreshPosts } = usePosts(searchQuery);
 
   const handleCreatePost = () => {
     router.push('/create');
@@ -33,6 +34,18 @@ export default function HomeScreen() {
       <View style={[styles.container, isRTL && styles.rtlContainer]}>
         <Header title={t('appName')} showLanguageSwitch />
         
+        <TextInput
+          style={[styles.searchInput, isRTL && styles.rtlText]}
+          placeholder={t('searchPosts')}
+          placeholderTextColor={colors.textLight}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          clearButtonMode="while-editing"
+          autoCorrect={false}
+          autoCapitalize="none"
+          accessibilityLabel={t('searchPosts')}
+        />
+
         {error ? (
           <EmptyState 
             icon="alert-circle" 
@@ -100,5 +113,19 @@ const styles = StyleSheet.create({
   },
   loader: {
     marginTop: 40,
+  },
+  searchInput: {
+    height: 40,
+    marginHorizontal: 16,
+    marginBottom: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    backgroundColor: colors.cardBackground,
+    color: colors.text,
+    fontSize: 16,
+  },
+  rtlText: {
+    textAlign: 'right',
+    writingDirection: 'rtl',
   },
 });

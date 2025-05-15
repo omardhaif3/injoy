@@ -2,7 +2,9 @@ import axios from 'axios';
 
 // Configure axios instance
 const api = axios.create({
-  baseURL: 'https://injoy.onrender.com/api',
+  // baseURL: 'https://injoy.onrender.com/api',
+  baseURL: 'http://localhost:5001/api',
+
   // In a real app, we'd use secure configuration from env variables
   // baseURL: process.env.EXPO_PUBLIC_API_URL,
 });
@@ -13,9 +15,11 @@ const MONGODB_URI = 'mongodb+srv://omardhaif3:Dh_77021061r@cluster0.wnpyz1y.mong
 // Create Posts API service
 export const apiService = {
   // Get all posts
-  getPosts: async () => {
+  getPosts: async (searchQuery?: string) => {
     try {
-      const response = await api.get('/posts');
+      const response = await api.get('/posts', {
+        params: searchQuery ? { q: searchQuery } : {},
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching posts:', error);
